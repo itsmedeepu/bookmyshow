@@ -77,7 +77,7 @@ function App() {
     <>
       <div className="parent">
         <div className="child1">
-          <h1>Booking Software</h1>
+          <h1>Book My Show</h1>
           <Quota
             qutoName="Gold"
             bookings={bookings.goldSeats}
