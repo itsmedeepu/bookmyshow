@@ -1,0 +1,12 @@
+.seats {
+  display: inline-block;
+}
+
+.seat:hover {
+  cursor: pointer;
+}
+
+.booked {
+  background-color: yellow;
+  color: red;
+}
