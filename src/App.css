@@ -24,3 +24,7 @@ tr {
 .display td:nth-child(1) {
   background-color: rgb(218, 204, 204);
 }
+
+.display-btn {
+  padding: 5px;
+}
