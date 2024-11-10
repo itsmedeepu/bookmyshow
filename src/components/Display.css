@@ -1,0 +1,11 @@
+.display-btn {
+  margin: 5px;
+}
+.seat-no {
+  width: 250px;
+  overflow-x: scroll;
+}
+.outer {
+  border: 1px solid blue;
+  margin-bottom: 5px;
+}
