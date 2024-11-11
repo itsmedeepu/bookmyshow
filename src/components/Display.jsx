@@ -24,7 +24,11 @@ function Display({ Quota }) {
         <p>Booked seat No's</p>
         <div className="seat-no">
           {seatsBooked.map((value, index) => {
-            return <button className="display-btn">{value}</button>;
+            return (
+              <button key={value} className="display-btn">
+                {value}
+              </button>
+            );
           })}
         </div>
       </div>
