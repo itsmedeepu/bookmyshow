@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer, useState } from "react";
 
 export const Bookingcontext = createContext({
   bookings: {
@@ -16,13 +16,50 @@ export const Bookingcontext = createContext({
     },
     totalBookings: 0,
   },
-
   addTickets: () => {},
 });
 
+function bookingReducerFunction(state, action) {
+  if (action.type === "BOOK_SEATS") {
+    const newState = { ...state, totalBookings: state.totalBookings + 1 };
+    switch (action.payload.quota) {
+      case "G":
+        newState.goldSeats = {
+          noOfSeats: state.goldSeats.noOfSeats + 1,
+          seatsBooked: [
+            ...state.goldSeats.seatsBooked,
+            action.payload.seatBooked,
+          ],
+        };
+        break;
+      case "P":
+        newState.platinumSeats = {
+          noOfSeats: state.platinumSeats.noOfSeats + 1,
+          seatsBooked: [
+            ...state.platinumSeats.seatsBooked,
+            action.payload.seatBooked,
+          ],
+        };
+        break;
+      case "S":
+        newState.silverSeats = {
+          noOfSeats: state.silverSeats.noOfSeats + 1,
+          seatsBooked: [
+            ...state.silverSeats.seatsBooked,
+            action.payload.seatBooked,
+          ],
+        };
+        break;
+      default:
+        return state;
+    }
+    return newState;
+  }
+}
 const BookingcontextProvider = ({ children }) => {
   const maxBookingsperUser = 5;
-  const [bookings, setBookings] = useState({
+
+  const [BookingState, bookingDispatcher] = useReducer(bookingReducerFunction, {
     goldSeats: {
       seatsBooked: [],
       noOfSeats: 0,
@@ -38,7 +75,7 @@ const BookingcontextProvider = ({ children }) => {
     totalBookings: 0,
   });
 
-  const isMaximum = () => bookings.totalBookings >= maxBookingsperUser;
+  const isMaximum = () => BookingState.totalBookings >= maxBookingsperUser;
 
   const handleClick = (rowindex, seatindex, event) => {
     if (isMaximum()) {
@@ -49,36 +86,17 @@ const BookingcontextProvider = ({ children }) => {
     const quota = event.target.value;
     const seatBooked = `${rowindex}-${seatindex}`;
 
-    setBookings((prev) => {
-      const newState = { ...prev, totalBookings: prev.totalBookings + 1 };
-      switch (quota) {
-        case "G":
-          newState.goldSeats = {
-            noOfSeats: prev.goldSeats.noOfSeats + 1,
-            seatsBooked: [...prev.goldSeats.seatsBooked, seatBooked],
-          };
-          break;
-        case "P":
-          newState.platinumSeats = {
-            noOfSeats: prev.platinumSeats.noOfSeats + 1,
-            seatsBooked: [...prev.platinumSeats.seatsBooked, seatBooked],
-          };
-          break;
-        case "S":
-          newState.silverSeats = {
-            noOfSeats: prev.silverSeats.noOfSeats + 1,
-            seatsBooked: [...prev.silverSeats.seatsBooked, seatBooked],
-          };
-          break;
-        default:
-          return prev;
-      }
-      return newState;
+    bookingDispatcher({
+      type: "BOOK_SEATS",
+      payload: {
+        quota,
+        seatBooked,
+      },
     });
   };
 
   const Bookingctx = {
-    bookings,
+    bookings: BookingState,
     addTickets: handleClick,
   };
 
