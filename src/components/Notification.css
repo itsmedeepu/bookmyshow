@@ -1,0 +1,17 @@
+.notification {
+  position: relative;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  transition: all 0.3s ease-in;
+}
+
+.success {
+  background-color: rgb(148, 255, 148);
+}
+.failed {
+  background-color: rgb(255, 99, 99);
+}
+.pending {
+  background-color: rgb(148, 148, 255);
+}
