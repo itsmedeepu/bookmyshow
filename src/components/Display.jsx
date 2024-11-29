@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
 import "../components/Display.css";
-import { Bookingcontext } from "../assets/store/BoookingContext";
+import { ticketActions } from "../store/booking-slice";
+import { useSelector, useDispatch } from "react-redux";
 function Display({ Quota }) {
-  const { bookings } = useContext(Bookingcontext);
+  const bookings = useSelector((state) => state.ticket.bookings);
+  const dispatcher = useDispatch();
   const getSeatsBooked = () => {
     switch (Quota) {
       case "Gold":
@@ -17,6 +18,10 @@ function Display({ Quota }) {
   };
 
   const seatsBooked = getSeatsBooked();
+
+  const handleDelete = (value) => {
+    dispatcher(ticketActions.deleteTicket({ seatno: value, quota: Quota }));
+  };
   return (
     <>
       <div className="outer">
@@ -25,9 +30,12 @@ function Display({ Quota }) {
         <div className="seat-no">
           {seatsBooked.map((value, index) => {
             return (
-              <button key={value} className="display-btn">
-                {value}
-              </button>
+              <div key={value}>
+                <button key={value} className="display-btn">
+                  {value}
+                </button>
+                <button onClick={() => handleDelete(value)}>X</button>
+              </div>
             );
           })}
         </div>
